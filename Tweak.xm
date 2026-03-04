@@ -18,9 +18,9 @@ void patch() {
     appendLog("========= Start patching =========");
 
     // Patch isJailbreak always is 0 (false)
-    patchOffset(0x1000056c8, "08 00 80 52");
-    patchOffset(0x1000056ec, "16 00 80 52");
-    patchOffset(0x1000057c4, "08 00 80 52");
+    patchOffsetDobby(0x1000056c8, "08 00 80 52");
+    patchOffsetDobby(0x1000056ec, "16 00 80 52");
+    patchOffsetDobby(0x1000057c4, "08 00 80 52");
 
     appendLog("========= Patch done =========");
 }

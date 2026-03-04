@@ -55,6 +55,10 @@ namespace KittyMemory
             return false;
         }
 
+        uint32_t before = 0;
+        memcpy(&before, address, 4);
+        KITTY_LOGD("Verify before 0x%llX = 0x%08X", (unsigned long long)address, before);
+
         mach_vm_size_t nread = 0;
         kern_return_t kret = mach_vm_read_overwrite(mach_task_self(), mach_vm_address_t(address), mach_vm_size_t(len),
                                                     mach_vm_address_t(buffer), &nread);
@@ -136,10 +140,6 @@ namespace KittyMemory
                        (void *)page_start, page_len, page_info.protection, kret);
             return KMS_ERR_PROT;
         }
-
-        uint32_t before = 0;
-        memcpy(&before, address, 4);
-        KITTY_LOGD("Verify before 0x%llX = 0x%08X", (unsigned long long)address, before);
 
         kret = mach_vm_write(self_task, mach_vm_address_t(address), vm_offset_t(buffer), mach_msg_type_number_t(len));
         if (kret != KERN_SUCCESS)

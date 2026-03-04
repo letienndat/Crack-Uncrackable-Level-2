@@ -16,6 +16,7 @@ endif
 KITTYMEMORY_PATH = KittyMemory
 KITTYMEMORY_SRC = $(wildcard $(KITTYMEMORY_PATH)/*.cpp)
 COMMON_SRC = Common.mm
+DOBBY_SRC = lib/libdobby.a
 
 include $(THEOS)/makefiles/common.mk
 
@@ -25,6 +26,7 @@ $(TWEAK_NAME)_FRAMEWORKS = Foundation UIKit
 $(TWEAK_NAME)_FILES = Tweak.xm $(KITTYMEMORY_SRC) $(COMMON_SRC)
 $(TWEAK_NAME)_CFLAGS = -fobjc-arc
 $(TWEAK_NAME)_CCFLAGS = -std=c++17 -DkITTYMEMORY_DEBUG
+$(TWEAK_NAME)_LDFLAGS = $(DOBBY_SRC)
 
 ifeq ($(_IGNORE_WARNINGS), 1)
 $(TWEAK_NAME)_CCFLAGS += -w
