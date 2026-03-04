@@ -10,17 +10,19 @@ void setup() {
     [common setFrameworkName:NAME_BINARY];
     appendLog("Tweak loaded");
 
-    // PATCH
+    // PATCH OFFSETS
     patch();
 }
 
 void patch() {
-    appendLog("Start patching");
+    appendLog("========= Start patching =========");
 
-    // Patch check showJailbreakAlert
-    patchOffset(0x100005958, "1F 01 00 71");
+    // Patch isJailbreak always is 0 (false)
+    patchOffset(0x1000056c8, "08 00 80 52");
+    patchOffset(0x1000056ec, "16 00 80 52");
+    patchOffset(0x1000057c4, "08 00 80 52");
 
-    appendLog("Patch done");
+    appendLog("========= Patch done =========");
 }
 
 void appendLog(const char *log) {

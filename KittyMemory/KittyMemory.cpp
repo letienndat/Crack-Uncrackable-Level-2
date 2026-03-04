@@ -137,6 +137,10 @@ namespace KittyMemory
             return KMS_ERR_PROT;
         }
 
+        uint32_t before = 0;
+        memcpy(&before, address, 4);
+        KITTY_LOGD("Verify before 0x%llX = 0x%08X", (unsigned long long)address, before);
+
         kret = mach_vm_write(self_task, mach_vm_address_t(address), vm_offset_t(buffer), mach_msg_type_number_t(len));
         if (kret != KERN_SUCCESS)
         {
@@ -144,6 +148,7 @@ namespace KittyMemory
             return KMS_ERR_VMWRITE;
         }
 
+        KITTY_LOGD("page_info.protection: %d, page_info.max_protection: %d", page_info.protection, page_info.max_protection);
         kret = mach_vm_protect(self_task, page_start, page_len, false, page_info.protection);
         if (kret != KERN_SUCCESS)
         {
@@ -154,6 +159,10 @@ namespace KittyMemory
         }
 
         sys_icache_invalidate(reinterpret_cast<void *>(page_start), page_len);
+
+        uint32_t after = 0;
+        memcpy(&after, address, 4);
+        KITTY_LOGD("Verify after 0x%llX = 0x%08X", (unsigned long long)address, after);
 
         return KMS_SUCCESS;
     }
