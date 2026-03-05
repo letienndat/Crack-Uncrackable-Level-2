@@ -5,7 +5,7 @@
 //  Created by Le Tien Dat on 3/4/26.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -13,6 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)setFrameworkName:(const char *)name_;
 -(const char *)getFrameworkName;
+
+-(UIWindow *)getKeyWindow;
+-(UIViewController *)getRootViewController;
+-(UIViewController *)getTopViewController;
 
 @end
 
