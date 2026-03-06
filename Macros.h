@@ -12,11 +12,12 @@
 #import "KittyMemory/MemoryPatch.hpp"
 #import "KittyMemory/writeData.hpp"
 #import "KittyMemory/KittyUtils.hpp"
+#import "mod/hook.h"
 
 #ifdef kJAILBREAK
 #import "lib/dobby.h"
 #else
-#import "patch/patch.h"
+#import "mod/patch.h"
 #endif
 
 #include <substrate.h>
@@ -25,23 +26,23 @@
 extern Common *common;
 
 #define LOG(...) \
-  NSLog(@"%s: %@", [common getFrameworkName], [NSString stringWithFormat:__VA_ARGS__])
+  NSLog(@"Tweak Mod >>> %@", [NSString stringWithFormat:__VA_ARGS__])
 
 // thanks to shmoo for the usefull stuff under this comment.
 #define timer(sec) dispatch_after(dispatch_time(DISPATCH_TIME_NOW, sec * NSEC_PER_SEC), dispatch_get_main_queue(), ^
 #define onMain(block) dispatch_async(dispatch_get_main_queue(), block)
 #define HOOK(offset, ptr, orig) MSHookFunction((void *)getRealOffset(offset), (void *)ptr, (void **)&orig)
 #define HOOK_NO_ORIG(offset, ptr) MSHookFunction((void *)getRealOffset(offset), (void *)ptr, NULL)
-#define HOOK_NONJB(offset, ptr, orig)               \
-  NSString *result_##y = StaticInlineHookPatch(     \
-      getRealOffset(offset), ptr, nullptr);         \
-  if (result_##y)                                   \
-  {                                                 \
-    LOG(@"Hook result: %s", result_##y.UTF8String); \
-    void *result = StaticInlineHookFunction(        \
-        getRealOffset(offset), ptr, (void *)orig);  \
-    LOG(@"Hook result %p", result);                 \
-    *(void **)(&orig) = (void *)result;             \
+#define HOOK_V2(offset, ptr, orig)                               \
+  NSString *result_##y = StaticInlineHookPatch(                  \
+      (char *)[common getFrameworkName], offset, nullptr);       \
+  if (result_##y)                                                \
+  {                                                              \
+    LOG(@"Hook result: %s", result_##y.UTF8String);              \
+    void *result = StaticInlineHookFunction(                     \
+        (char *)[common getFrameworkName], offset, (void *)ptr); \
+    LOG(@"Hook result %p", result);                              \
+    *(void **)(&orig) = (void *)result;                          \
   }
 
 // Note to not prepend an underscore to the symbol. See Notes on the Apple manpage (https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/dlsym.3.html)

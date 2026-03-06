@@ -3,6 +3,7 @@
 
 #define NAME_BINARY "UnCrackable Level 2"
 
+void hook();
 void patch();
 
 static void didFinishLaunching(CFNotificationCenterRef center, void *observer,
@@ -35,8 +36,16 @@ static void didFinishLaunching(CFNotificationCenterRef center, void *observer,
 void setup() {
   [common setFrameworkName:NAME_BINARY];
 
-  // PATCH OFFSETS
+  hook();
   patch();
+}
+
+void hook() {
+  LOG(@"========= Start hooking =========");
+
+  // HOOK_V2(ENCRYPTOFFSET("0x69fb7c"), hook_func, orig_func);
+
+  LOG(@"========= Hook done =========");
 }
 
 void patch() {
